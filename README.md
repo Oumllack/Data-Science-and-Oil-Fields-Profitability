@@ -143,7 +143,7 @@ Our analysis follows a structured approach:
 - Yahoo Finance (WTI, market indicators)
 - Synthetic production data (for demonstration)
 
-## 🔮 Forecast Analysis (2024-2050)
+## 🔮 Forecast Analysis (2025-2050)
 
 ### Oil Prices
 
