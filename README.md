@@ -142,14 +142,3 @@ Our analysis follows a structured approach:
 #### 9.1 Data Sources
 - Yahoo Finance (WTI, market indicators)
 - Synthetic production data (for demonstration)
-
-#### 9.2 Code Repository
-- GitHub: [Oil Fields Profitability](https://github.com/Oumllack/Data-Science-and-Oil-Fields-Profitability)
-- Documentation: [Wiki](https://github.com/Oumllack/Data-Science-and-Oil-Fields-Profitability/wiki)
-- Issue Tracker: [Issues](https://github.com/Oumllack/Data-Science-and-Oil-Fields-Profitability/issues)
-
-#### 9.3 Contact
-For questions or collaboration:
-- Email: [your.email@example.com]
-- LinkedIn: [Your Profile]
-- GitHub: [Your Profile] 
