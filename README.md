@@ -142,3 +142,44 @@ Our analysis follows a structured approach:
 #### 9.1 Data Sources
 - Yahoo Finance (WTI, market indicators)
 - Synthetic production data (for demonstration)
+
+## 🔮 Forecast Analysis (2024-2050)
+
+### Oil Prices
+
+**Causes of Predicted Trends:**
+- **Upward Trend (2% per year)**: Structural inflation, growing demand from emerging markets, higher extraction costs
+- **Economic Cycles (5 years)**: Over/under production cycles, global demand fluctuations
+- **Decreasing Volatility**: More mature markets, better inventory management, energy diversification
+
+**Industry Implications:**
+- **2024-2030**: Period of relative stability with prices between $70-90/bbl
+- **2030-2040**: Accelerated energy transition, peak demand around 2040
+- **2040-2050**: Progressive demand decline, but sustained high prices for marginal projects
+
+### Field Production
+
+**Causes of Predicted Trends:**
+- **Base Decline (15% per year)**: Natural reservoir depletion
+- **Technological Improvements**: New recovery techniques, advanced EOR
+- **Operational Variations**: Maintenance, seasonal optimizations
+
+**Operator Implications:**
+- **Short Term (2024-2030)**: Focus on existing field optimization
+- **Medium Term (2030-2040)**: Investment in recovery technologies
+- **Long Term (2040-2050)**: Transition to smaller but more profitable projects
+
+### Confidence Intervals
+
+Confidence intervals widen over time, reflecting:
+- Growing uncertainty about climate policies
+- Evolution of alternative technologies
+- Geopolitical changes
+- Global demand variations
+
+### Key Milestones to Monitor
+
+1. **2030**: Energy transition acceleration
+2. **2040**: Global demand peak
+3. **2045**: Massive deployment of alternative technologies
+4. **2050**: New global energy equilibrium
