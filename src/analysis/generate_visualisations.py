@@ -107,6 +107,7 @@ class OilVisualisationGenerator:
     def plot_correlation_matrix(self, start_date: str = '2010-01-01', end_date: str = None) -> None:
         """
         Génère une matrice de corrélation entre les variables les plus pertinentes.
+        Utilise uniquement les couleurs pour représenter les corrélations.
         
         Args:
             start_date: Date de début au format 'YYYY-MM-DD'
@@ -130,21 +131,23 @@ class OilVisualisationGenerator:
         # Création de la figure avec une taille plus grande
         plt.figure(figsize=(12, 10))
         
-        # Création de la heatmap avec des annotations plus lisibles
+        # Création de la heatmap sans annotations numériques
         mask = np.triu(np.ones_like(corr_matrix, dtype=bool))  # Masque pour le triangle supérieur
         sns.heatmap(
             corr_matrix,
             mask=mask,
-            annot=True,
-            fmt='.2f',  # Format des annotations : 2 décimales
+            annot=False,  # Désactivation des annotations numériques
             cmap='coolwarm',
             vmin=-1,
             vmax=1,
             center=0,
             square=True,
             linewidths=.5,
-            cbar_kws={'shrink': .8},
-            annot_kws={'size': 10}
+            cbar_kws={
+                'shrink': .8,
+                'label': 'Coefficient de corrélation',
+                'ticks': [-1, -0.5, 0, 0.5, 1]
+            }
         )
         
         # Personnalisation des labels
@@ -157,6 +160,7 @@ class OilVisualisationGenerator:
             'price_volatility': 'Volatilité des prix'
         }
         
+        # Rotation des labels pour une meilleure lisibilité
         plt.xticks(
             np.arange(len(selected_columns)) + 0.5,
             [labels[col] for col in selected_columns],
@@ -169,8 +173,12 @@ class OilVisualisationGenerator:
             rotation=0
         )
         
-        # Ajout du titre et ajustement de la mise en page
-        plt.title('Matrice de corrélation des variables clés', pad=20, size=14)
+        # Ajout du titre et de la légende
+        plt.title('Matrice de corrélation des variables clés\n(rouge = corrélation positive, bleu = corrélation négative)', 
+                 pad=20, 
+                 size=14)
+        
+        # Ajustement de la mise en page
         plt.tight_layout()
         
         # Sauvegarde de la figure avec une meilleure résolution
