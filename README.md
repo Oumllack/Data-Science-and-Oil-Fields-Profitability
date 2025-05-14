@@ -68,7 +68,7 @@ Our analysis follows a structured approach:
 - **Interpretation:** There is a strong positive correlation between oil prices and the S&P 500, and a negative correlation with the dollar index. Gold and oil show moderate positive correlation.
 
 #### 3.4 Production Analysis
-![Production Decline - Field A](reports/figures/field_production_Champ A.png)
+![Production Decline - Field A](reports/figures/field_production_Field A.png)
 - **Typical decline rates:** 15-25% annually
 - **Interpretation:** Production profiles follow exponential decline, with seasonal and operational variations. Synthetic data demonstrates realistic field behavior.
 
@@ -144,9 +144,9 @@ Our analysis follows a structured approach:
 - Synthetic production data (for demonstration)
 
 #### 9.2 Code Repository
-- GitHub: [Oil Fields Profitability](https://github.com/yourusername/oil-fields-profitability)
-- Documentation: [Wiki](https://github.com/yourusername/oil-fields-profitability/wiki)
-- Issue Tracker: [Issues](https://github.com/yourusername/oil-fields-profitability/issues)
+- GitHub: [Oil Fields Profitability](https://github.com/Oumllack/Data-Science-and-Oil-Fields-Profitability)
+- Documentation: [Wiki](https://github.com/Oumllack/Data-Science-and-Oil-Fields-Profitability/wiki)
+- Issue Tracker: [Issues](https://github.com/Oumllack/Data-Science-and-Oil-Fields-Profitability/issues)
 
 #### 9.3 Contact
 For questions or collaboration:
