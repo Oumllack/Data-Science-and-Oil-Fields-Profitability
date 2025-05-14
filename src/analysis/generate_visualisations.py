@@ -106,7 +106,7 @@ class OilVisualisationGenerator:
         
     def plot_correlation_matrix(self, start_date: str = '2010-01-01', end_date: str = None) -> None:
         """
-        Génère une matrice de corrélation entre les différentes variables.
+        Génère une matrice de corrélation entre les variables les plus pertinentes.
         
         Args:
             start_date: Date de début au format 'YYYY-MM-DD'
@@ -114,15 +114,72 @@ class OilVisualisationGenerator:
         """
         df = self.collector.prepare_training_data(start_date, end_date)
         
-        # Sélection des colonnes numériques
-        numeric_cols = df.select_dtypes(include=[np.number]).columns
-        corr_matrix = df[numeric_cols].corr()
+        # Sélection des variables les plus pertinentes
+        selected_columns = [
+            'price',           # Prix du pétrole
+            'dollar_index',    # Indice du dollar
+            'sp500',          # S&P 500
+            'vix',            # Indice de volatilité
+            'gold',           # Prix de l'or
+            'price_volatility' # Volatilité des prix
+        ]
         
+        # Calcul de la matrice de corrélation
+        corr_matrix = df[selected_columns].corr()
+        
+        # Création de la figure avec une taille plus grande
         plt.figure(figsize=(12, 10))
-        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1, center=0)
-        plt.title('Matrice de corrélation des variables')
+        
+        # Création de la heatmap avec des annotations plus lisibles
+        mask = np.triu(np.ones_like(corr_matrix, dtype=bool))  # Masque pour le triangle supérieur
+        sns.heatmap(
+            corr_matrix,
+            mask=mask,
+            annot=True,
+            fmt='.2f',  # Format des annotations : 2 décimales
+            cmap='coolwarm',
+            vmin=-1,
+            vmax=1,
+            center=0,
+            square=True,
+            linewidths=.5,
+            cbar_kws={'shrink': .8},
+            annot_kws={'size': 10}
+        )
+        
+        # Personnalisation des labels
+        labels = {
+            'price': 'Prix du pétrole',
+            'dollar_index': 'Indice du dollar',
+            'sp500': 'S&P 500',
+            'vix': 'VIX',
+            'gold': 'Prix de l\'or',
+            'price_volatility': 'Volatilité des prix'
+        }
+        
+        plt.xticks(
+            np.arange(len(selected_columns)) + 0.5,
+            [labels[col] for col in selected_columns],
+            rotation=45,
+            ha='right'
+        )
+        plt.yticks(
+            np.arange(len(selected_columns)) + 0.5,
+            [labels[col] for col in selected_columns],
+            rotation=0
+        )
+        
+        # Ajout du titre et ajustement de la mise en page
+        plt.title('Matrice de corrélation des variables clés', pad=20, size=14)
         plt.tight_layout()
-        plt.savefig(self.output_dir / 'correlation_matrix.png', dpi=300, bbox_inches='tight')
+        
+        # Sauvegarde de la figure avec une meilleure résolution
+        plt.savefig(
+            self.output_dir / 'correlation_matrix.png',
+            dpi=300,
+            bbox_inches='tight',
+            facecolor='white'
+        )
         plt.close()
         
     def plot_field_production(self, field_name: str, decline_rate: float, initial_production: float, years: int = 20) -> None:
