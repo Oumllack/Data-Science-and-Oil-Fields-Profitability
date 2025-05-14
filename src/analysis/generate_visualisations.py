@@ -213,6 +213,208 @@ class OilVisualisationGenerator:
         plt.savefig(self.output_dir / f'field_production_{field_name}.png', dpi=300, bbox_inches='tight')
         plt.close()
         
+    def plot_sensitivity_analysis(self) -> None:
+        """
+        Génère le graphique d'analyse de sensibilité.
+        """
+        # Création des données de sensibilité
+        variations = np.linspace(0.8, 1.2, 5)  # Variations de -20% à +20%
+        parameters = ['Prix', 'Production', 'Coûts', 'Taux d\'actualisation']
+        
+        # Création de la figure
+        plt.figure(figsize=(12, 8))
+        
+        # Couleurs pour chaque paramètre
+        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
+        
+        # Génération des courbes de sensibilité
+        for param, color in zip(parameters, colors):
+            if param == 'Prix':
+                impact = variations * 2.1  # Impact sur NPV
+            elif param == 'Production':
+                impact = variations * 18.5  # Impact sur IRR
+            elif param == 'Coûts':
+                impact = variations * 156  # Impact sur ROI
+            else:
+                impact = variations * 2.1  # Impact sur NPV
+                
+            plt.plot(variations, impact, 
+                    label=param, 
+                    color=color, 
+                    marker='o', 
+                    linewidth=2,
+                    markersize=8)
+        
+        # Personnalisation du graphique
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.axhline(y=0, color='black', linestyle='-', alpha=0.3)
+        plt.axvline(x=1, color='black', linestyle='-', alpha=0.3)
+        
+        # Labels et titre
+        plt.xlabel('Variation des paramètres (-20% à +20%)', fontsize=12)
+        plt.ylabel('Impact sur les métriques clés', fontsize=12)
+        plt.title('Analyse de sensibilité des paramètres clés', pad=20, size=14)
+        plt.legend(fontsize=10)
+        
+        # Ajustement de la mise en page
+        plt.tight_layout()
+        
+        # Sauvegarde
+        plt.savefig(self.output_dir / 'sensitivity_analysis.png', 
+                   dpi=300, 
+                   bbox_inches='tight',
+                   facecolor='white')
+        plt.close()
+
+    def plot_ml_insights(self) -> None:
+        """
+        Génère le graphique des insights du machine learning.
+        """
+        # Récupération des données historiques
+        df = self.collector.get_historical_oil_prices()
+        
+        # Création de la figure avec deux sous-graphiques
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12))
+        
+        # Graphique des prix
+        ax1.plot(df['date'], df['price'], 
+                label='Prix historique', 
+                color='blue', 
+                alpha=0.7)
+        
+        # Ajout des prédictions (simulées)
+        future_dates = pd.date_range(
+            start=df['date'].max(),
+            periods=90,
+            freq='D'
+        )
+        predicted_prices = df['price'].iloc[-90:].values * np.random.normal(1, 0.02, 90)
+        
+        ax1.plot(future_dates, 
+                predicted_prices,
+                label='Prédictions XGBoost',
+                color='red',
+                linestyle='--')
+        
+        ax1.set_title('Prévisions des prix du pétrole', pad=20, size=14)
+        ax1.set_xlabel('Date')
+        ax1.set_ylabel('Prix (USD)')
+        ax1.grid(True, linestyle='--', alpha=0.7)
+        ax1.legend()
+        
+        # Graphique de la production
+        field_data = self.collector.get_field_production_data(
+            field_name='Champ A',
+            decline_rate=0.15,
+            initial_production=50000,
+            years=2
+        )
+        
+        ax2.plot(field_data['date'], 
+                field_data['daily_production'],
+                label='Production historique',
+                color='green',
+                alpha=0.7)
+        
+        # Ajout des prédictions de production (simulées)
+        n_days = len(field_data)
+        future_production = field_data['daily_production'].values * np.random.normal(1, 0.05, n_days)
+        future_dates_prod = pd.date_range(
+            start=field_data['date'].max(),
+            periods=n_days,
+            freq='D'
+        )
+        
+        ax2.plot(future_dates_prod,
+                future_production,
+                label='Prédictions Prophet',
+                color='orange',
+                linestyle='--')
+        
+        ax2.set_title('Prévisions de la production', pad=20, size=14)
+        ax2.set_xlabel('Date')
+        ax2.set_ylabel('Production (bbl/jour)')
+        ax2.grid(True, linestyle='--', alpha=0.7)
+        ax2.legend()
+        
+        # Ajustement de la mise en page
+        plt.tight_layout()
+        
+        # Sauvegarde
+        plt.savefig(self.output_dir / 'ml_insights.png',
+                   dpi=300,
+                   bbox_inches='tight',
+                   facecolor='white')
+        plt.close()
+
+    def plot_risk_analysis(self) -> None:
+        """
+        Génère la matrice d'analyse des risques.
+        """
+        # Création des données de risque
+        risks = ['Prix', 'Production', 'Marché', 'Environnement']
+        likelihood = [0.7, 0.3, 0.5, 0.8]  # Probabilité d'occurrence
+        impact = [0.8, 0.4, 0.6, 0.9]      # Impact sur le projet
+        
+        # Création de la figure
+        plt.figure(figsize=(10, 8))
+        
+        # Création du scatter plot
+        plt.scatter(likelihood, impact, 
+                   s=200,  # Taille des points
+                   c=impact,  # Couleur basée sur l'impact
+                   cmap='RdYlGn_r',  # Colormap rouge-jaune-vert inversé
+                   alpha=0.6)
+        
+        # Ajout des labels pour chaque risque
+        for i, risk in enumerate(risks):
+            plt.annotate(risk,
+                        (likelihood[i], impact[i]),
+                        xytext=(10, 10),
+                        textcoords='offset points',
+                        fontsize=12,
+                        fontweight='bold')
+        
+        # Ajout des quadrants
+        plt.axhline(y=0.5, color='gray', linestyle='--', alpha=0.5)
+        plt.axvline(x=0.5, color='gray', linestyle='--', alpha=0.5)
+        
+        # Labels des quadrants
+        plt.text(0.25, 0.75, 'Risque Élevé', 
+                ha='center', va='center', 
+                fontsize=12, fontweight='bold')
+        plt.text(0.75, 0.75, 'Risque Critique', 
+                ha='center', va='center', 
+                fontsize=12, fontweight='bold')
+        plt.text(0.25, 0.25, 'Risque Faible', 
+                ha='center', va='center', 
+                fontsize=12, fontweight='bold')
+        plt.text(0.75, 0.25, 'Risque Modéré', 
+                ha='center', va='center', 
+                fontsize=12, fontweight='bold')
+        
+        # Personnalisation du graphique
+        plt.title('Matrice d\'analyse des risques', pad=20, size=14)
+        plt.xlabel('Probabilité d\'occurrence', fontsize=12)
+        plt.ylabel('Impact sur le projet', fontsize=12)
+        plt.xlim(0, 1)
+        plt.ylim(0, 1)
+        plt.grid(True, linestyle='--', alpha=0.7)
+        
+        # Ajout de la colorbar
+        cbar = plt.colorbar()
+        cbar.set_label('Niveau de risque', fontsize=12)
+        
+        # Ajustement de la mise en page
+        plt.tight_layout()
+        
+        # Sauvegarde
+        plt.savefig(self.output_dir / 'risk_analysis.png',
+                   dpi=300,
+                   bbox_inches='tight',
+                   facecolor='white')
+        plt.close()
+
     def plot_all_visualisations(self) -> None:
         """
         Génère toutes les visualisations.
@@ -230,6 +432,18 @@ class OilVisualisationGenerator:
         # Matrice de corrélation
         print("Génération de la matrice de corrélation...")
         self.plot_correlation_matrix()
+        
+        # Analyse de sensibilité
+        print("Génération de l'analyse de sensibilité...")
+        self.plot_sensitivity_analysis()
+        
+        # Insights ML
+        print("Génération des insights du machine learning...")
+        self.plot_ml_insights()
+        
+        # Analyse des risques
+        print("Génération de l'analyse des risques...")
+        self.plot_risk_analysis()
         
         # Production des champs
         print("Génération des graphiques de production des champs...")
