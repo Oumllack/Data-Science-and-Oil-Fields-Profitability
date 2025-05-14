@@ -1,5 +1,5 @@
 """
-Module de génération des visualisations pour l'analyse de rentabilité des champs pétroliers.
+Module for generating visualizations for oil field profitability analysis.
 """
 
 import os
@@ -36,19 +36,15 @@ class OilVisualisationGenerator:
         
     def plot_historical_oil_prices(self, start_date: str = '2010-01-01', end_date: str = None) -> None:
         """
-        Génère un graphique des prix historiques du pétrole.
-        
-        Args:
-            start_date: Date de début au format 'YYYY-MM-DD'
-            end_date: Date de fin au format 'YYYY-MM-DD' (par défaut: aujourd'hui)
+        Generates a graph of historical oil prices.
         """
         df = self.collector.get_historical_oil_prices(start_date, end_date)
         
         plt.figure(figsize=(12, 6))
-        plt.plot(df['date'], df['price'], label='Prix du pétrole (WTI)')
-        plt.title('Évolution des prix du pétrole (WTI)')
+        plt.plot(df['date'], df['price'], label='Oil Price (WTI)')
+        plt.title('Historical Oil Prices (WTI)')
         plt.xlabel('Date')
-        plt.ylabel('Prix (USD)')
+        plt.ylabel('Price (USD)')
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
@@ -57,22 +53,18 @@ class OilVisualisationGenerator:
         
     def plot_market_indicators(self, start_date: str = '2010-01-01', end_date: str = None) -> None:
         """
-        Génère un graphique des indicateurs de marché.
-        
-        Args:
-            start_date: Date de début au format 'YYYY-MM-DD'
-            end_date: Date de fin au format 'YYYY-MM-DD' (par défaut: aujourd'hui)
+        Generates a graph of market indicators.
         """
         df = self.collector.get_market_indicators(start_date, end_date)
         
         fig, axes = plt.subplots(2, 2, figsize=(15, 10))
-        fig.suptitle('Indicateurs de marché', fontsize=16)
+        fig.suptitle('Market Indicators', fontsize=16)
         
-        # Indice du dollar
-        axes[0, 0].plot(df['date'], df['dollar_index'], label='Indice du dollar')
-        axes[0, 0].set_title('Indice du dollar')
+        # Dollar Index
+        axes[0, 0].plot(df['date'], df['dollar_index'], label='Dollar Index')
+        axes[0, 0].set_title('Dollar Index')
         axes[0, 0].set_xlabel('Date')
-        axes[0, 0].set_ylabel('Valeur')
+        axes[0, 0].set_ylabel('Value')
         axes[0, 0].grid(True)
         axes[0, 0].legend()
         
@@ -80,23 +72,23 @@ class OilVisualisationGenerator:
         axes[0, 1].plot(df['date'], df['sp500'], label='S&P 500')
         axes[0, 1].set_title('S&P 500')
         axes[0, 1].set_xlabel('Date')
-        axes[0, 1].set_ylabel('Valeur')
+        axes[0, 1].set_ylabel('Value')
         axes[0, 1].grid(True)
         axes[0, 1].legend()
         
         # VIX
         axes[1, 0].plot(df['date'], df['vix'], label='VIX')
-        axes[1, 0].set_title('Indice de volatilité (VIX)')
+        axes[1, 0].set_title('Volatility Index (VIX)')
         axes[1, 0].set_xlabel('Date')
-        axes[1, 0].set_ylabel('Valeur')
+        axes[1, 0].set_ylabel('Value')
         axes[1, 0].grid(True)
         axes[1, 0].legend()
         
-        # Prix de l'or
-        axes[1, 1].plot(df['date'], df['gold'], label='Prix de l\'or')
-        axes[1, 1].set_title('Prix de l\'or')
+        # Gold Price
+        axes[1, 1].plot(df['date'], df['gold'], label='Gold Price')
+        axes[1, 1].set_title('Gold Price')
         axes[1, 1].set_xlabel('Date')
-        axes[1, 1].set_ylabel('Prix (USD)')
+        axes[1, 1].set_ylabel('Price (USD)')
         axes[1, 1].grid(True)
         axes[1, 1].legend()
         
@@ -106,37 +98,33 @@ class OilVisualisationGenerator:
         
     def plot_correlation_matrix(self, start_date: str = '2010-01-01', end_date: str = None) -> None:
         """
-        Génère une matrice de corrélation entre les variables les plus pertinentes.
-        Utilise uniquement les couleurs pour représenter les corrélations.
-        
-        Args:
-            start_date: Date de début au format 'YYYY-MM-DD'
-            end_date: Date de fin au format 'YYYY-MM-DD' (par défaut: aujourd'hui)
+        Generates a correlation matrix between key variables.
+        Uses only colors to represent correlations.
         """
         df = self.collector.prepare_training_data(start_date, end_date)
         
-        # Sélection des variables les plus pertinentes
+        # Selection of key variables
         selected_columns = [
-            'price',           # Prix du pétrole
-            'dollar_index',    # Indice du dollar
+            'price',           # Oil price
+            'dollar_index',    # Dollar index
             'sp500',          # S&P 500
-            'vix',            # Indice de volatilité
-            'gold',           # Prix de l'or
-            'price_volatility' # Volatilité des prix
+            'vix',            # Volatility index
+            'gold',           # Gold price
+            'price_volatility' # Price volatility
         ]
         
-        # Calcul de la matrice de corrélation
+        # Correlation matrix calculation
         corr_matrix = df[selected_columns].corr()
         
-        # Création de la figure avec une taille plus grande
+        # Figure creation with larger size
         plt.figure(figsize=(12, 10))
         
-        # Création de la heatmap sans annotations numériques
-        mask = np.triu(np.ones_like(corr_matrix, dtype=bool))  # Masque pour le triangle supérieur
+        # Heatmap creation without numerical annotations
+        mask = np.triu(np.ones_like(corr_matrix, dtype=bool))  # Upper triangle mask
         sns.heatmap(
             corr_matrix,
             mask=mask,
-            annot=False,  # Désactivation des annotations numériques
+            annot=False,  # Disable numerical annotations
             cmap='coolwarm',
             vmin=-1,
             vmax=1,
@@ -145,22 +133,22 @@ class OilVisualisationGenerator:
             linewidths=.5,
             cbar_kws={
                 'shrink': .8,
-                'label': 'Coefficient de corrélation',
+                'label': 'Correlation Coefficient',
                 'ticks': [-1, -0.5, 0, 0.5, 1]
             }
         )
         
-        # Personnalisation des labels
+        # Label customization
         labels = {
-            'price': 'Prix du pétrole',
-            'dollar_index': 'Indice du dollar',
+            'price': 'Oil Price',
+            'dollar_index': 'Dollar Index',
             'sp500': 'S&P 500',
             'vix': 'VIX',
-            'gold': 'Prix de l\'or',
-            'price_volatility': 'Volatilité des prix'
+            'gold': 'Gold Price',
+            'price_volatility': 'Price Volatility'
         }
         
-        # Rotation des labels pour une meilleure lisibilité
+        # Label rotation for better readability
         plt.xticks(
             np.arange(len(selected_columns)) + 0.5,
             [labels[col] for col in selected_columns],
@@ -173,15 +161,15 @@ class OilVisualisationGenerator:
             rotation=0
         )
         
-        # Ajout du titre et de la légende
-        plt.title('Matrice de corrélation des variables clés\n(rouge = corrélation positive, bleu = corrélation négative)', 
+        # Title and legend
+        plt.title('Correlation Matrix of Key Variables\n(red = positive correlation, blue = negative correlation)', 
                  pad=20, 
                  size=14)
         
-        # Ajustement de la mise en page
+        # Layout adjustment
         plt.tight_layout()
         
-        # Sauvegarde de la figure avec une meilleure résolution
+        # Save with better resolution
         plt.savefig(
             self.output_dir / 'correlation_matrix.png',
             dpi=300,
@@ -192,21 +180,15 @@ class OilVisualisationGenerator:
         
     def plot_field_production(self, field_name: str, decline_rate: float, initial_production: float, years: int = 20) -> None:
         """
-        Génère un graphique de la production d'un champ pétrolier.
-        
-        Args:
-            field_name: Nom du champ
-            decline_rate: Taux de déclin annuel
-            initial_production: Production initiale (bbl/jour)
-            years: Nombre d'années de production
+        Generates a graph of oil field production.
         """
         df = self.collector.get_field_production_data(field_name, decline_rate, initial_production, years)
         
         plt.figure(figsize=(12, 6))
-        plt.plot(df['date'], df['daily_production'], label=f'Production du champ {field_name}')
-        plt.title(f'Production du champ {field_name}')
+        plt.plot(df['date'], df['daily_production'], label=f'Field {field_name} Production')
+        plt.title(f'Field {field_name} Production')
         plt.xlabel('Date')
-        plt.ylabel('Production (bbl/jour)')
+        plt.ylabel('Production (bbl/day)')
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
@@ -215,28 +197,28 @@ class OilVisualisationGenerator:
         
     def plot_sensitivity_analysis(self) -> None:
         """
-        Génère le graphique d'analyse de sensibilité.
+        Generates the sensitivity analysis graph.
         """
-        # Création des données de sensibilité
-        variations = np.linspace(0.8, 1.2, 5)  # Variations de -20% à +20%
-        parameters = ['Prix', 'Production', 'Coûts', 'Taux d\'actualisation']
+        # Sensitivity data creation
+        variations = np.linspace(0.8, 1.2, 5)  # Variations from -20% to +20%
+        parameters = ['Price', 'Production', 'Costs', 'Discount Rate']
         
-        # Création de la figure
+        # Figure creation
         plt.figure(figsize=(12, 8))
         
-        # Couleurs pour chaque paramètre
+        # Colors for each parameter
         colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
         
-        # Génération des courbes de sensibilité
+        # Sensitivity curves generation
         for param, color in zip(parameters, colors):
-            if param == 'Prix':
-                impact = variations * 2.1  # Impact sur NPV
+            if param == 'Price':
+                impact = variations * 2.1  # Impact on NPV
             elif param == 'Production':
-                impact = variations * 18.5  # Impact sur IRR
-            elif param == 'Coûts':
-                impact = variations * 156  # Impact sur ROI
+                impact = variations * 18.5  # Impact on IRR
+            elif param == 'Costs':
+                impact = variations * 156  # Impact on ROI
             else:
-                impact = variations * 2.1  # Impact sur NPV
+                impact = variations * 2.1  # Impact on NPV
                 
             plt.plot(variations, impact, 
                     label=param, 
@@ -245,21 +227,21 @@ class OilVisualisationGenerator:
                     linewidth=2,
                     markersize=8)
         
-        # Personnalisation du graphique
+        # Graph customization
         plt.grid(True, linestyle='--', alpha=0.7)
         plt.axhline(y=0, color='black', linestyle='-', alpha=0.3)
         plt.axvline(x=1, color='black', linestyle='-', alpha=0.3)
         
-        # Labels et titre
-        plt.xlabel('Variation des paramètres (-20% à +20%)', fontsize=12)
-        plt.ylabel('Impact sur les métriques clés', fontsize=12)
-        plt.title('Analyse de sensibilité des paramètres clés', pad=20, size=14)
+        # Labels and title
+        plt.xlabel('Parameter Variation (-20% to +20%)', fontsize=12)
+        plt.ylabel('Impact on Key Metrics', fontsize=12)
+        plt.title('Sensitivity Analysis of Key Parameters', pad=20, size=14)
         plt.legend(fontsize=10)
         
-        # Ajustement de la mise en page
+        # Layout adjustment
         plt.tight_layout()
         
-        # Sauvegarde
+        # Save
         plt.savefig(self.output_dir / 'sensitivity_analysis.png', 
                    dpi=300, 
                    bbox_inches='tight',
@@ -268,21 +250,21 @@ class OilVisualisationGenerator:
 
     def plot_ml_insights(self) -> None:
         """
-        Génère le graphique des insights du machine learning.
+        Generates the machine learning insights graph.
         """
-        # Récupération des données historiques
+        # Historical data retrieval
         df = self.collector.get_historical_oil_prices()
         
-        # Création de la figure avec deux sous-graphiques
+        # Figure creation with two subplots
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12))
         
-        # Graphique des prix
+        # Price graph
         ax1.plot(df['date'], df['price'], 
-                label='Prix historique', 
+                label='Historical Price', 
                 color='blue', 
                 alpha=0.7)
         
-        # Ajout des prédictions (simulées)
+        # Price predictions (simulated)
         future_dates = pd.date_range(
             start=df['date'].max(),
             periods=90,
@@ -292,19 +274,19 @@ class OilVisualisationGenerator:
         
         ax1.plot(future_dates, 
                 predicted_prices,
-                label='Prédictions XGBoost',
+                label='XGBoost Predictions',
                 color='red',
                 linestyle='--')
         
-        ax1.set_title('Prévisions des prix du pétrole', pad=20, size=14)
+        ax1.set_title('Oil Price Forecasts', pad=20, size=14)
         ax1.set_xlabel('Date')
-        ax1.set_ylabel('Prix (USD)')
+        ax1.set_ylabel('Price (USD)')
         ax1.grid(True, linestyle='--', alpha=0.7)
         ax1.legend()
         
-        # Graphique de la production
+        # Production graph
         field_data = self.collector.get_field_production_data(
-            field_name='Champ A',
+            field_name='Field A',
             decline_rate=0.15,
             initial_production=50000,
             years=2
@@ -312,11 +294,11 @@ class OilVisualisationGenerator:
         
         ax2.plot(field_data['date'], 
                 field_data['daily_production'],
-                label='Production historique',
+                label='Historical Production',
                 color='green',
                 alpha=0.7)
         
-        # Ajout des prédictions de production (simulées)
+        # Production predictions (simulated)
         n_days = len(field_data)
         future_production = field_data['daily_production'].values * np.random.normal(1, 0.05, n_days)
         future_dates_prod = pd.date_range(
@@ -327,20 +309,20 @@ class OilVisualisationGenerator:
         
         ax2.plot(future_dates_prod,
                 future_production,
-                label='Prédictions Prophet',
+                label='Prophet Predictions',
                 color='orange',
                 linestyle='--')
         
-        ax2.set_title('Prévisions de la production', pad=20, size=14)
+        ax2.set_title('Production Forecasts', pad=20, size=14)
         ax2.set_xlabel('Date')
-        ax2.set_ylabel('Production (bbl/jour)')
+        ax2.set_ylabel('Production (bbl/day)')
         ax2.grid(True, linestyle='--', alpha=0.7)
         ax2.legend()
         
-        # Ajustement de la mise en page
+        # Layout adjustment
         plt.tight_layout()
         
-        # Sauvegarde
+        # Save
         plt.savefig(self.output_dir / 'ml_insights.png',
                    dpi=300,
                    bbox_inches='tight',
@@ -349,24 +331,24 @@ class OilVisualisationGenerator:
 
     def plot_risk_analysis(self) -> None:
         """
-        Génère la matrice d'analyse des risques.
+        Generates the risk analysis matrix.
         """
-        # Création des données de risque
-        risks = ['Prix', 'Production', 'Marché', 'Environnement']
-        likelihood = [0.7, 0.3, 0.5, 0.8]  # Probabilité d'occurrence
-        impact = [0.8, 0.4, 0.6, 0.9]      # Impact sur le projet
+        # Risk data creation
+        risks = ['Price', 'Production', 'Market', 'Environmental']
+        likelihood = [0.7, 0.3, 0.5, 0.8]  # Occurrence probability
+        impact = [0.8, 0.4, 0.6, 0.9]      # Project impact
         
-        # Création de la figure
+        # Figure creation
         plt.figure(figsize=(10, 8))
         
-        # Création du scatter plot
+        # Scatter plot creation
         plt.scatter(likelihood, impact, 
-                   s=200,  # Taille des points
-                   c=impact,  # Couleur basée sur l'impact
-                   cmap='RdYlGn_r',  # Colormap rouge-jaune-vert inversé
+                   s=200,  # Point size
+                   c=impact,  # Color based on impact
+                   cmap='RdYlGn_r',  # Red-yellow-green inverted colormap
                    alpha=0.6)
         
-        # Ajout des labels pour chaque risque
+        # Labels for each risk
         for i, risk in enumerate(risks):
             plt.annotate(risk,
                         (likelihood[i], impact[i]),
@@ -375,40 +357,40 @@ class OilVisualisationGenerator:
                         fontsize=12,
                         fontweight='bold')
         
-        # Ajout des quadrants
+        # Quadrant lines
         plt.axhline(y=0.5, color='gray', linestyle='--', alpha=0.5)
         plt.axvline(x=0.5, color='gray', linestyle='--', alpha=0.5)
         
-        # Labels des quadrants
-        plt.text(0.25, 0.75, 'Risque Élevé', 
+        # Quadrant labels
+        plt.text(0.25, 0.75, 'High Risk', 
                 ha='center', va='center', 
                 fontsize=12, fontweight='bold')
-        plt.text(0.75, 0.75, 'Risque Critique', 
+        plt.text(0.75, 0.75, 'Critical Risk', 
                 ha='center', va='center', 
                 fontsize=12, fontweight='bold')
-        plt.text(0.25, 0.25, 'Risque Faible', 
+        plt.text(0.25, 0.25, 'Low Risk', 
                 ha='center', va='center', 
                 fontsize=12, fontweight='bold')
-        plt.text(0.75, 0.25, 'Risque Modéré', 
+        plt.text(0.75, 0.25, 'Moderate Risk', 
                 ha='center', va='center', 
                 fontsize=12, fontweight='bold')
         
-        # Personnalisation du graphique
-        plt.title('Matrice d\'analyse des risques', pad=20, size=14)
-        plt.xlabel('Probabilité d\'occurrence', fontsize=12)
-        plt.ylabel('Impact sur le projet', fontsize=12)
+        # Graph customization
+        plt.title('Risk Analysis Matrix', pad=20, size=14)
+        plt.xlabel('Occurrence Probability', fontsize=12)
+        plt.ylabel('Project Impact', fontsize=12)
         plt.xlim(0, 1)
         plt.ylim(0, 1)
         plt.grid(True, linestyle='--', alpha=0.7)
         
-        # Ajout de la colorbar
+        # Colorbar
         cbar = plt.colorbar()
-        cbar.set_label('Niveau de risque', fontsize=12)
+        cbar.set_label('Risk Level', fontsize=12)
         
-        # Ajustement de la mise en page
+        # Layout adjustment
         plt.tight_layout()
         
-        # Sauvegarde
+        # Save
         plt.savefig(self.output_dir / 'risk_analysis.png',
                    dpi=300,
                    bbox_inches='tight',
