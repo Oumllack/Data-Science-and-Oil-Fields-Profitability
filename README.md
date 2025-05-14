@@ -83,15 +83,15 @@ Our analysis follows a structured approach:
 - **Interpretation:** All scenarios show positive NPV and IRR above industry thresholds, indicating strong economic viability. The optimistic scenario yields exceptional returns.
 
 #### 3.6 Sensitivity Analysis
-![Sensitivity Analysis](docs/figures/sensitivity_analysis.png)
+![Sensitivity Analysis](reports/figures/sensitivity_analysis.png)
 - **Interpretation:** NPV is most sensitive to oil price changes, while IRR is more affected by production rates. Cost and discount rate have moderate impacts.
 
 #### 3.7 Machine Learning Insights
-![ML Insights](docs/figures/ml_insights.png)
+![ML Insights](reports/figures/ml_insights.png)
 - **Interpretation:** XGBoost and Prophet models provide robust price and production forecasts. Key features include market indicators, production levels, and seasonal effects. Model accuracy exceeds 80% for both price and production predictions.
 
 #### 3.8 Risk Assessment
-![Risk Analysis](docs/figures/risk_analysis.png)
+![Risk Analysis](reports/figures/risk_analysis.png)
 - **Interpretation:** Price and environmental risks are the most significant. Production and market risks are moderate. Risk matrix guides strategic mitigation planning.
 
 ---
